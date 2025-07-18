@@ -60,7 +60,7 @@ def voiceInfo(group,name,rgnCount,rgnSplits,velCount,veloSplits,roots,tunes,name
                 smpInfo = smpInfo + "\tRegion %s:\n" % str(r)
             smpInfo = smpInfo + "\t\tSample Name: %s\n" % names[(r*velCount)+v]
             smpInfo = smpInfo + "\t\tRoot:        %s\n" % roots[(r*velCount)+v]
-            smpInfo = smpInfo + "\t\tDetune:      %s (%s st)\n" % (tunes[(r*velCount)+v], semitones)
+            smpInfo = smpInfo + "\t\tDetune:      %s (%s cents)\n" % (tunes[(r*velCount)+v], semitones)
         if r != rgnCount-1:
             smpInfo = smpInfo + "\t%s\n" % (" -"*6)
     text = text + smpInfo + "\n%s\n\n" % ("-"*20)
@@ -160,7 +160,6 @@ while seek<size:
                     if waveFineTune > 0:
                         waveRootKey += 1
                         waveFineTune = -waveFineTune + 255
-                    print(waveFineTune)
                 else:
                     if waveFineTune >= 128:
                         waveRootKey += 1
@@ -201,6 +200,7 @@ while seek<size:
                 if (velRegionCount>1 and ignoreVelPgms) or (keymapType > 24 and ignorePercussion) or ((waveStartFrame,waveEndFrame,waveLoopFrame) in waveforms and ignoreDupes):
                     pass
                 else:
+                    print("Exporting waveform %s/%s" % (str(v*regionCount+r), str(regionCount*velRegionCount)), end="\r")
                     file.seek(waveStartFrame*2)
                     waveLength=(waveEndFrame-waveStartFrame+1)*2
                     waveData=file.read(waveLength)
@@ -240,6 +240,7 @@ while seek<size:
         regionsInfo=open(outPath+"/Regions.txt","w")
         regionsInfo.write(keymapInfo)
         regionsInfo.close()
+        input("Finished processing.\nPress Enter to exit.")
         os._exit(0)
             
     
